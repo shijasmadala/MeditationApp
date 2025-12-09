@@ -12,31 +12,44 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.NewReleases
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.shas.meditationapp.explore.presentation.ExploreViewModel
+import com.shas.meditationapp.explore.presentation.screen.components.NewReleasesView
+import com.shas.meditationapp.explore.presentation.screen.components.PopularPlayListScreen
 import com.shas.meditationapp.explore.presentation.screen.components.TrendingTrackTrackScreen
 import com.shas.meditationapp.ui.theme.AppBackground
 import com.shas.meditationapp.ui.theme.ChipActiveBackground
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientEnd
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientStart
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ExploreScreen() {
-    Column(modifier = Modifier.fillMaxSize()) {
+fun ExploreScreen(viewModel: ExploreViewModel = koinViewModel()) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -74,27 +87,51 @@ fun ExploreScreen() {
                 )
             }
         }
+        Spacer(modifier = Modifier.height(12.dp))
+        TitleComposable(name = "Trending Tracks", icon = Icons.AutoMirrored.Filled.TrendingUp)
         Spacer(modifier = Modifier.height(8.dp))
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(5.dp)) {
-            Icon(
-                modifier = Modifier.padding(start = 10.dp),
-                imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-                contentDescription = "",
-                tint = ChipActiveBackground
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                "Trending Tracks",
-                color = Color.White,
-                style = MaterialTheme.typography.bodyMedium
-            )
+        LazyRow {
+            state.trendingTrack?.results?.let { items ->
+                items(items) {
+                    TrendingTrackTrackScreen(it)
+                }
+            }
         }
 
+        Spacer(modifier = Modifier.height(12.dp))
+        TitleComposable(name = "New Releases", icon = Icons.Default.NewReleases)
         Spacer(modifier = Modifier.height(8.dp))
         LazyRow {
             items(3) {
-                TrendingTrackTrackScreen()
+                NewReleasesView()
             }
         }
+        Spacer(modifier = Modifier.height(12.dp))
+        TitleComposable(name = "Popular Playlists", icon = Icons.Default.MusicNote)
+        Spacer(modifier = Modifier.height(8.dp))
+        LazyRow {
+            items(3) {
+                PopularPlayListScreen()
+            }
+        }
+    }
+}
+
+
+@Composable
+fun TitleComposable(name: String, icon: ImageVector) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(5.dp)) {
+        Icon(
+            modifier = Modifier.padding(start = 10.dp),
+            imageVector = icon,
+            contentDescription = "",
+            tint = ChipActiveBackground
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            name,
+            color = Color.White,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }

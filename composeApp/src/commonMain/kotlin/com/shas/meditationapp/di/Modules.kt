@@ -2,6 +2,7 @@ package com.shas.meditationapp.di
 
 
 import com.shas.meditationapp.core.data.HttpClientFactory
+import com.shas.meditationapp.explore.presentation.ExploreViewModel
 import com.shas.meditationapp.home.data.network.KtorRemoteHomeSource
 import com.shas.meditationapp.home.data.network.RemoteHomeSource
 import com.shas.meditationapp.home.data.repository.HomeRepositoryImpl
@@ -21,4 +22,5 @@ val sharedModule = module {
     singleOf(::HomeRepositoryImpl).bind<HomeRepository>()
 
     viewModelOf(::HomeViewModel)
+    viewModelOf(::ExploreViewModel)
 }

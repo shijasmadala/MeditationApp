@@ -1,5 +1,6 @@
 package com.shas.meditationapp.explore.presentation.screen.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,21 +20,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import com.shas.meditationapp.home.domain.model.ResultModel
+import meditationapp.composeapp.generated.resources.Res
+import meditationapp.composeapp.generated.resources.nature
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun TrendingTrackTrackScreen(itemTrack: ResultModel?) {
+fun NewReleasesView() {
     Column(modifier = Modifier.padding(10.dp), horizontalAlignment = Alignment.Start) {
         Box(
             modifier = Modifier
-                .width(150.dp)
-                .height(150.dp)
+                .width(110.dp)
+                .height(110.dp)
                 .clip(RoundedCornerShape(20.dp))
                 .background(color = Color.Gray.copy(alpha = 0.1f))
         ) {
-            AsyncImage(
-                model = itemTrack?.albumImage,
+            Image(
+                painter = painterResource(resource = Res.drawable.nature),
                 contentDescription = "",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
@@ -42,18 +44,17 @@ fun TrendingTrackTrackScreen(itemTrack: ResultModel?) {
         Spacer(modifier = Modifier.height(5.dp))
 
         Text(
-            itemTrack?.name ?: "Midnight Meditation",
+            "Midnight Meditation",
             color = Color.White,
             fontSize = 12.sp,
             modifier = Modifier.padding(start = 8.dp)
         )
 
         Text(
-            itemTrack?.albumName ?: "",
+            "Poet",
             color = Color.LightGray,
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(start = 8.dp)
         )
     }
-
 }

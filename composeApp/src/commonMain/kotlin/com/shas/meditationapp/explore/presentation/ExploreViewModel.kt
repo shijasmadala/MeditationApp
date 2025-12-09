@@ -14,6 +14,10 @@ class ExploreViewModel(private val homeRepository: HomeRepository) : ViewModel()
     private val _state = MutableStateFlow(ExploreUiState())
     val state = _state
 
+    init {
+        getTrendingTrack()
+    }
+
     fun getTrendingTrack() = viewModelScope.launch {
         _state.update {
             it
