@@ -29,9 +29,11 @@ class ExploreViewModel(
 
         val trendingDeferred = async { getTrendingTrack() }
         val albumDeferred = async { getPopularAlbum() }
+        val popularPlayList = async { getPopularPlayList() }
 
         trendingDeferred.await()
         albumDeferred.await()
+        popularPlayList.await()
 
         _state.update { it.copy(loading = false) }
     }
@@ -60,6 +62,21 @@ class ExploreViewModel(
                 _state.update {
                     it
                         .copy(loading = false, error = null, popularAlbum = resp)
+                }
+            }.onError { error ->
+                _state.update {
+                    it
+                        .copy(loading = false, error = error.name)
+                }
+            }
+    }
+
+    suspend fun getPopularPlayList() {
+        exploreRepository.getPopularAlbums(order = "popularity_total", limit = "20")
+            .onSuccess { resp ->
+                _state.update {
+                    it
+                        .copy(loading = false, error = null, popularPlayList = resp)
                 }
             }.onError { error ->
                 _state.update {

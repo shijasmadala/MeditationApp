@@ -44,6 +44,7 @@ import com.shas.meditationapp.ui.theme.AppBackground
 import com.shas.meditationapp.ui.theme.ChipActiveBackground
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientEnd
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientStart
+import com.shas.meditationapp.util.HorizontalItemShimmer
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -51,19 +52,14 @@ fun ExploreScreen(viewModel: ExploreViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .clip(RoundedCornerShape(10.dp))
+            modifier = Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(10.dp))
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            FeaturedCardGradientStart,
-                            FeaturedCardGradientEnd
+                            FeaturedCardGradientStart, FeaturedCardGradientEnd
                         )
                     )
-                ),
-            contentAlignment = Alignment.CenterStart
+                ), contentAlignment = Alignment.CenterStart
         ) {
             Column(modifier = Modifier.padding(start = 10.dp).statusBarsPadding()) {
                 Text("Explore", color = Color.White)
@@ -83,17 +79,23 @@ fun ExploreScreen(viewModel: ExploreViewModel = koinViewModel()) {
                             color = Color.Gray,
                             style = MaterialTheme.typography.bodyMedium
                         )
-                    }
-                )
+                    })
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
         TitleComposable(name = "Trending Tracks", icon = Icons.AutoMirrored.Filled.TrendingUp)
         Spacer(modifier = Modifier.height(8.dp))
-        LazyRow {
-            state.trendingTrack?.results?.let { items ->
-                items(items) {
-                    TrendingTrackTrackScreen(it)
+
+        if (state.loading) {
+            LazyRow {
+                items(5) { HorizontalItemShimmer() }
+            }
+        } else {
+            LazyRow {
+                state.trendingTrack?.results?.let { items ->
+                    items(items) {
+                        TrendingTrackTrackScreen(it)
+                    }
                 }
             }
         }
@@ -101,19 +103,35 @@ fun ExploreScreen(viewModel: ExploreViewModel = koinViewModel()) {
         Spacer(modifier = Modifier.height(12.dp))
         TitleComposable(name = "New Releases", icon = Icons.Default.NewReleases)
         Spacer(modifier = Modifier.height(8.dp))
-        LazyRow {
-            state.popularAlbum?.results?.let { albums ->
-                items(albums) {
-                    NewReleasesView(it)
+        if (state.loading) {
+            LazyRow {
+                items(5) { HorizontalItemShimmer() }
+            }
+        } else {
+            LazyRow {
+                state.popularAlbum?.results?.let { albums ->
+                    items(albums) {
+                        NewReleasesView(it)
+                    }
                 }
             }
         }
+
         Spacer(modifier = Modifier.height(12.dp))
         TitleComposable(name = "Popular Playlists", icon = Icons.Default.MusicNote)
         Spacer(modifier = Modifier.height(8.dp))
-        LazyRow {
-            items(3) {
-                PopularPlayListScreen()
+
+        if (state.loading) {
+            LazyRow {
+                items(5) { HorizontalItemShimmer() }
+            }
+        } else {
+            LazyRow {
+                state.popularPlayList?.results?.let { playList ->
+                    items(items = playList) { item ->
+                        PopularPlayListScreen(item)
+                    }
+                }
             }
         }
     }
@@ -131,9 +149,7 @@ fun TitleComposable(name: String, icon: ImageVector) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            name,
-            color = Color.White,
-            style = MaterialTheme.typography.bodyMedium
+            name, color = Color.White, style = MaterialTheme.typography.bodyMedium
         )
     }
 }

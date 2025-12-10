@@ -1,6 +1,5 @@
 package com.shas.meditationapp.explore.presentation.screen.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,12 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import meditationapp.composeapp.generated.resources.Res
-import meditationapp.composeapp.generated.resources.nature
-import org.jetbrains.compose.resources.painterResource
+import coil3.compose.AsyncImage
+import com.shas.meditationapp.explore.domain.model.AlbumResultModel
 
 @Composable
-fun PopularPlayListScreen() {
+fun PopularPlayListScreen(track: AlbumResultModel?) {
     Column(modifier = Modifier.padding(10.dp), horizontalAlignment = Alignment.Start) {
         Box(
             modifier = Modifier
@@ -34,8 +32,8 @@ fun PopularPlayListScreen() {
                 .clip(RoundedCornerShape(20.dp))
                 .background(color = Color.Gray.copy(alpha = 0.1f))
         ) {
-            Image(
-                painter = painterResource(resource = Res.drawable.nature),
+            AsyncImage(
+                model = track?.image,
                 contentDescription = "",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
@@ -44,14 +42,14 @@ fun PopularPlayListScreen() {
         Spacer(modifier = Modifier.height(5.dp))
 
         Text(
-            "Midnight Meditation",
+            track?.name ?: "Midnight Meditation",
             color = Color.White,
             fontSize = 12.sp,
             modifier = Modifier.padding(start = 8.dp)
         )
 
         Text(
-            "Poet",
+            track?.artistName ?: "",
             color = Color.LightGray,
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(start = 8.dp)
