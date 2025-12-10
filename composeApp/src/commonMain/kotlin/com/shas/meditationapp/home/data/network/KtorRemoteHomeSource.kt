@@ -25,6 +25,7 @@ class KtorRemoteHomeSource(private val httpClient: HttpClient) : RemoteHomeSourc
                 parameter("format", formate)
                 parameter("order", order)
                 parameter("tags", tags)
+                parameter("limit","20")
             }
         }
     }

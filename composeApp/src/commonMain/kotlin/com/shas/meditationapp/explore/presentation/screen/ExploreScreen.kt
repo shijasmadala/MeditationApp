@@ -1,8 +1,10 @@
 package com.shas.meditationapp.explore.presentation.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -19,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.filled.GeneratingTokens
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.NewReleases
 import androidx.compose.material3.Icon
@@ -37,6 +43,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shas.meditationapp.explore.presentation.ExploreViewModel
+import com.shas.meditationapp.explore.presentation.screen.components.GenresCardsView
 import com.shas.meditationapp.explore.presentation.screen.components.NewReleasesView
 import com.shas.meditationapp.explore.presentation.screen.components.PopularPlayListScreen
 import com.shas.meditationapp.explore.presentation.screen.components.TrendingTrackTrackScreen
@@ -45,6 +52,7 @@ import com.shas.meditationapp.ui.theme.ChipActiveBackground
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientEnd
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientStart
 import com.shas.meditationapp.util.HorizontalItemShimmer
+import com.shas.meditationapp.util.UiUtils.genres
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -132,6 +140,29 @@ fun ExploreScreen(viewModel: ExploreViewModel = koinViewModel()) {
                         PopularPlayListScreen(item)
                     }
                 }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+        TitleComposable(name = "Brows Genres", icon = Icons.Default.GeneratingTokens)
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp),
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(genres) {
+                GenresCardsView(
+                    emoji = it.emoji,
+                    title = it.title,
+                    subtitle = it.subtitle,
+                    gradient = it.gradient
+                )
             }
         }
     }
