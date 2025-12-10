@@ -102,8 +102,10 @@ fun ExploreScreen(viewModel: ExploreViewModel = koinViewModel()) {
         TitleComposable(name = "New Releases", icon = Icons.Default.NewReleases)
         Spacer(modifier = Modifier.height(8.dp))
         LazyRow {
-            items(3) {
-                NewReleasesView()
+            state.popularAlbum?.results?.let { albums ->
+                items(albums) {
+                    NewReleasesView(it)
+                }
             }
         }
         Spacer(modifier = Modifier.height(12.dp))

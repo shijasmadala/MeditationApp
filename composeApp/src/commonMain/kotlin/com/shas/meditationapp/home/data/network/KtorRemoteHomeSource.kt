@@ -3,6 +3,7 @@ package com.shas.meditationapp.home.data.network
 import com.shas.meditationapp.core.data.safeCall
 import com.shas.meditationapp.core.domain.DataError
 import com.shas.meditationapp.core.domain.Result
+import com.shas.meditationapp.explore.data.dto.AlbumResponseDto
 import com.shas.meditationapp.home.data.dto.HomeTrackResponseDto
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -37,6 +38,24 @@ class KtorRemoteHomeSource(private val httpClient: HttpClient) : RemoteHomeSourc
             httpClient.get(
                 urlString = "$BASE_URL/tracks/?"
             ) {
+                parameter("client_id", clientId)
+                parameter("format", formate)
+                parameter("order", order)
+            }
+        }
+    }
+
+    override suspend fun getPopularAlbums(
+        clientId: String,
+        formate: String,
+        order: String,
+        limit: String
+    ): Result<AlbumResponseDto, DataError.Remote> {
+        return safeCall <AlbumResponseDto>{
+            httpClient.get(
+                urlString = "$BASE_URL/albums/?"
+            ) {
+                parameter("limit",limit)
                 parameter("client_id", clientId)
                 parameter("format", formate)
                 parameter("order", order)

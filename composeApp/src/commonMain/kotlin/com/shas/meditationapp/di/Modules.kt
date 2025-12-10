@@ -2,6 +2,8 @@ package com.shas.meditationapp.di
 
 
 import com.shas.meditationapp.core.data.HttpClientFactory
+import com.shas.meditationapp.explore.data.repository.ExploreRepositoryImpl
+import com.shas.meditationapp.explore.domain.repository.ExploreRepository
 import com.shas.meditationapp.explore.presentation.ExploreViewModel
 import com.shas.meditationapp.home.data.network.KtorRemoteHomeSource
 import com.shas.meditationapp.home.data.network.RemoteHomeSource
@@ -20,6 +22,7 @@ val sharedModule = module {
     single { HttpClientFactory.create(get()) }
     singleOf(::KtorRemoteHomeSource).bind<RemoteHomeSource>()
     singleOf(::HomeRepositoryImpl).bind<HomeRepository>()
+    singleOf(::ExploreRepositoryImpl).bind<ExploreRepository>()
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::ExploreViewModel)
