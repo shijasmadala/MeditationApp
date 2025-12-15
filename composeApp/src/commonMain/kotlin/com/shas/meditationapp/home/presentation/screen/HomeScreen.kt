@@ -35,12 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.shas.meditationapp.home.presentation.HomeViewModel
-import com.shas.meditationapp.home.presentation.components.Loader
 import com.shas.meditationapp.home.presentation.components.SongChipView
-import com.shas.meditationapp.ui.theme.AppBackground
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientEnd
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientStart
 import com.shas.meditationapp.util.UiUtils
+import com.shas.meditationapp.util.VerticalHomeShimmer
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +76,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
             }
         }
 
-        if (state.loading) Loader() else
+        if (state.loading) VerticalHomeShimmer() else
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
