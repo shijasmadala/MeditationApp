@@ -1,5 +1,6 @@
 package com.shas.meditationapp.app
 
+import SongDetailsScreen
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -78,7 +79,7 @@ fun App() {
             ) {
                 navigation<Route.MainNavGraph>(startDestination = Route.HomeScreen) {
                     composable<Route.HomeScreen> {
-                        HomeScreen()
+                        HomeScreen(navController = navController)
                     }
 
                     composable<Route.ExploreScreen> {
@@ -91,6 +92,10 @@ fun App() {
 
                     composable<Route.ProfileScreen> {
                         ProfileScreen()
+                    }
+
+                    composable<Route.SongDetailsScreen> {
+                        SongDetailsScreen()
                     }
                 }
             }

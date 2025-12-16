@@ -18,4 +18,7 @@ interface Route {
     @Serializable
     data object ProfileScreen : Route
 
+    @Serializable
+    data object SongDetailsScreen : Route
+
 }

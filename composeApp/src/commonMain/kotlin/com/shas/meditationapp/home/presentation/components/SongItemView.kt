@@ -1,4 +1,5 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,11 +27,14 @@ import com.shas.meditationapp.home.domain.model.ResultModel
 import com.shas.meditationapp.util.UiUtils
 
 @Composable
-fun SongItemScreen(trackItem: ResultModel?) {
+fun SongItemScreen(trackItem: ResultModel?, onItemClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                onItemClick.invoke()
+            }
             .height(110.dp)
             .padding(10.dp)
             .clip(RoundedCornerShape(20.dp))
