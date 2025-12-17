@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -93,7 +93,7 @@ fun SongItemScreen(trackItem: ResultModel?, onItemClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Icon(
-                    imageVector = Icons.Outlined.Favorite,
+                    imageVector = Icons.Outlined.FavoriteBorder,
                     modifier = Modifier.size(20.dp),
                     contentDescription = "",
                     tint = Color.Gray
