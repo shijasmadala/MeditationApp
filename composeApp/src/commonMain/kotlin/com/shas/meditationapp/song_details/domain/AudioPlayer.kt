@@ -8,6 +8,7 @@ interface AudioPlayer {
     fun stop()
     fun seekTo(positionMs: Long)
     fun release()
+    fun reset()
 
     val isPlaying: StateFlow<Boolean>
     val currentPosition: StateFlow<Long>

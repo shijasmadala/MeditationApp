@@ -10,6 +10,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
 private const val BASE_URL = "https://api.jamendo.com/v3.0"
+
 class KtorRemoteHomeSource(private val httpClient: HttpClient) : RemoteHomeSource {
     override suspend fun getAllTracks(
         clientId: String,
@@ -25,7 +26,7 @@ class KtorRemoteHomeSource(private val httpClient: HttpClient) : RemoteHomeSourc
                 parameter("format", formate)
                 parameter("order", order)
                 parameter("tags", tags)
-                parameter("limit","20")
+                parameter("limit", "20")
             }
         }
     }
@@ -35,7 +36,7 @@ class KtorRemoteHomeSource(private val httpClient: HttpClient) : RemoteHomeSourc
         formate: String,
         order: String
     ): Result<HomeTrackResponseDto, DataError.Remote> {
-        return safeCall <HomeTrackResponseDto>{
+        return safeCall<HomeTrackResponseDto> {
             httpClient.get(
                 urlString = "$BASE_URL/tracks/?"
             ) {
@@ -52,15 +53,27 @@ class KtorRemoteHomeSource(private val httpClient: HttpClient) : RemoteHomeSourc
         order: String,
         limit: String
     ): Result<AlbumResponseDto, DataError.Remote> {
-        return safeCall <AlbumResponseDto>{
+        return safeCall<AlbumResponseDto> {
             httpClient.get(
                 urlString = "$BASE_URL/albums/?"
             ) {
-                parameter("limit",limit)
+                parameter("limit", limit)
                 parameter("client_id", clientId)
                 parameter("format", formate)
                 parameter("order", order)
-                parameter("tags","relaxing")
+                parameter("tags", "relaxing")
+            }
+        }
+    }
+
+    override suspend fun getTrackById(
+        trackId: String?,
+        clientId: String
+    ): Result<HomeTrackResponseDto, DataError.Remote> {
+        return safeCall<HomeTrackResponseDto> {
+            httpClient.get(urlString = "$BASE_URL/tracks/?") {
+                parameter("id", trackId)
+                parameter("client_id", clientId)
             }
         }
     }

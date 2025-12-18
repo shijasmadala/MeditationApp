@@ -10,6 +10,8 @@ import com.shas.meditationapp.home.data.network.RemoteHomeSource
 import com.shas.meditationapp.home.data.repository.HomeRepositoryImpl
 import com.shas.meditationapp.home.domain.repository.HomeRepository
 import com.shas.meditationapp.home.presentation.HomeViewModel
+import com.shas.meditationapp.song_details.data.repository.SongDetailsRepositoryImpl
+import com.shas.meditationapp.song_details.domain.repository.SongDetailsRepository
 import com.shas.meditationapp.song_details.presentation.SongDetailViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -24,6 +26,7 @@ val sharedModule = module {
     singleOf(::KtorRemoteHomeSource).bind<RemoteHomeSource>()
     singleOf(::HomeRepositoryImpl).bind<HomeRepository>()
     singleOf(::ExploreRepositoryImpl).bind<ExploreRepository>()
+    singleOf(::SongDetailsRepositoryImpl).bind<SongDetailsRepository>()
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::ExploreViewModel)

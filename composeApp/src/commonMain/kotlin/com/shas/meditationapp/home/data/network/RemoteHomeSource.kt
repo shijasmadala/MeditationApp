@@ -25,4 +25,9 @@ interface RemoteHomeSource {
         order: String,
         limit: String
     ): Result<AlbumResponseDto, DataError.Remote>
+
+    suspend fun getTrackById(
+        trackId: String?,
+        clientId: String,
+    ): Result<HomeTrackResponseDto, DataError.Remote>
 }

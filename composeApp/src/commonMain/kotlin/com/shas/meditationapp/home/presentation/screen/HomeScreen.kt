@@ -183,7 +183,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel(), navController: NavCon
                 state.homeTrack?.results?.let { tracks ->
                     items(tracks) { track ->
                         SongItemScreen(track, onItemClick = {
-                            navController.navigate(Route.SongDetailsScreen)
+                            navController.navigate(Route.SongDetailsScreen(trackId = it?.id ?: ""))
                         })
                     }
                 }

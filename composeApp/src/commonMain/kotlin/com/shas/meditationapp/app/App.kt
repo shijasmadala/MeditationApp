@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.shas.meditationapp.ProfileScreen
 import com.shas.meditationapp.explore.presentation.screen.ExploreScreen
 import com.shas.meditationapp.favorites.FavoritesScreen
@@ -95,7 +96,8 @@ fun App() {
                     }
 
                     composable<Route.SongDetailsScreen> {
-                        SongDetailsScreen()
+                        val args = it.toRoute<Route.SongDetailsScreen>()
+                        SongDetailsScreen(trackId = args.trackId, navController = navController)
                     }
                 }
             }

@@ -27,13 +27,13 @@ import com.shas.meditationapp.home.domain.model.ResultModel
 import com.shas.meditationapp.util.UiUtils
 
 @Composable
-fun SongItemScreen(trackItem: ResultModel?, onItemClick: () -> Unit) {
+fun SongItemScreen(trackItem: ResultModel?, onItemClick: (ResultModel?) -> Unit) {
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                onItemClick.invoke()
+                onItemClick.invoke(trackItem)
             }
             .height(110.dp)
             .padding(10.dp)

@@ -1,5 +1,5 @@
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -31,22 +32,54 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import coil3.compose.AsyncImage
+import com.shas.meditationapp.song_details.presentation.SongDetailViewModel
 import com.shas.meditationapp.ui.theme.AppBackground
-import meditationapp.composeapp.generated.resources.Res
-import meditationapp.composeapp.generated.resources.nature
-import org.jetbrains.compose.resources.painterResource
+import com.shas.meditationapp.util.UiUtils
+import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SongDetailsScreen(
+    navController: NavController,
+    viewModel: SongDetailViewModel = koinViewModel(),
+    trackId: String?
 ) {
+    val state by viewModel.songDetailState.collectAsStateWithLifecycle()
+    val isPlaying by viewModel.isPlaying.collectAsState()
+    val duration by viewModel.duration.collectAsState()
+    val position by viewModel.position.collectAsState()
+
+    var sliderPosition by remember { mutableStateOf(0f) }
+    var isDragging by remember { mutableStateOf(false) }
+
+    LaunchedEffect(position, duration, isDragging) {
+        if (!isDragging && duration > 0) {
+            sliderPosition = position.toFloat()
+        }
+    }
+
+    val songItem = state.songDetail?.results?.get(0)
+
+    LaunchedEffect(Unit) {
+        viewModel.getTrackById(trackId)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,7 +97,10 @@ fun SongDetailsScreen(
                 )
             },
             navigationIcon = {
-                IconButton(onClick = {}) {
+                IconButton(onClick = {
+                    viewModel.onExitScreen()
+                    navController.popBackStack()
+                }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
@@ -100,8 +136,8 @@ fun SongDetailsScreen(
                 .clip(RoundedCornerShape(24.dp))
                 .background(Color.DarkGray)
         ) {
-            Image(
-                painter = painterResource(Res.drawable.nature),
+            AsyncImage(
+                model = state.songDetail?.results?.get(0)?.image,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
@@ -112,7 +148,7 @@ fun SongDetailsScreen(
 
         // 🎵 Title
         Text(
-            text = "Sleep Essentials - Featured",
+            text = songItem?.name ?: "Sleep Essentials - Featured",
             color = Color.White,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -132,7 +168,7 @@ fun SongDetailsScreen(
 
         // 📊 Plays + Duration
         Text(
-            text = "500K plays  •  30:00",
+            text = "${songItem?.artistName}  •  ${UiUtils.formatDuration(songItem?.duration ?: 0)}",
             color = Color.Gray,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -145,8 +181,16 @@ fun SongDetailsScreen(
             modifier = Modifier.padding(horizontal = 24.dp)
         ) {
             Slider(
-                value = 0f,
-                onValueChange = {},
+                value = sliderPosition,
+                onValueChange = {
+                    isDragging = true
+                    sliderPosition = it
+                },
+                onValueChangeFinished = {
+                    isDragging = false
+                    viewModel.seekTo(sliderPosition.toLong())
+                },
+                valueRange = 0f..duration.toFloat(),
                 colors = SliderDefaults.colors(
                     thumbColor = Color.White,
                     activeTrackColor = Color.White,
@@ -159,7 +203,11 @@ fun SongDetailsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("0:00", color = Color.Gray, fontSize = 12.sp)
-                Text("30:00", color = Color.Gray, fontSize = 12.sp)
+                Text(
+                    UiUtils.formatDuration(songItem?.duration ?: 0),
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
             }
         }
 
@@ -188,16 +236,27 @@ fun SongDetailsScreen(
                 )
             }
 
+            val audioUrl = state.songDetail
+                ?.results
+                ?.firstOrNull()
+                ?.audio
             // Play button
             Box(
                 modifier = Modifier
                     .size(72.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFF8A2BE2)),
+                    .background(Color(0xFF8A2BE2))
+                    .clickable {
+                        if (isPlaying) viewModel.pause() else {
+                            if (!audioUrl.isNullOrBlank()) {
+                                viewModel.play(audioUrl)
+                            }
+                        }
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Filled.PlayArrow,
+                    imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.size(36.dp)
