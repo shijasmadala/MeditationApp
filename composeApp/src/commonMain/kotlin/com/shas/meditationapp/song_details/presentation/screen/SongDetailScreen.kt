@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.shas.meditationapp.PlatformBackHandler
 import com.shas.meditationapp.song_details.presentation.SongDetailViewModel
 import com.shas.meditationapp.ui.theme.AppBackground
 import com.shas.meditationapp.util.UiUtils
@@ -65,6 +67,14 @@ fun SongDetailsScreen(
     val isPlaying by viewModel.isPlaying.collectAsState()
     val duration by viewModel.duration.collectAsState()
     val position by viewModel.position.collectAsState()
+    val remaining by viewModel.songTimer.collectAsState()
+    val elapsedTime by viewModel.elapsedTime.collectAsState()
+    val isSongBuffering by viewModel.isBuffering.collectAsState()
+
+    PlatformBackHandler {
+        viewModel.onExitScreen()
+        navController.popBackStack()
+    }
 
     var sliderPosition by remember { mutableStateOf(0f) }
     var isDragging by remember { mutableStateOf(false) }
@@ -168,7 +178,7 @@ fun SongDetailsScreen(
 
         // 📊 Plays + Duration
         Text(
-            text = "${songItem?.artistName}  •  ${UiUtils.formatDuration(songItem?.duration ?: 0)}",
+            text = "${songItem?.artistName}  •  ${UiUtils.formatDuration(songItem?.duration?.toLong() ?: 0)}",
             color = Color.Gray,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -202,9 +212,9 @@ fun SongDetailsScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("0:00", color = Color.Gray, fontSize = 12.sp)
+                Text(UiUtils.formatTime(elapsedTime), color = Color.Gray, fontSize = 12.sp)
                 Text(
-                    UiUtils.formatDuration(songItem?.duration ?: 0),
+                    UiUtils.formatTime(remaining),
                     color = Color.Gray,
                     fontSize = 12.sp
                 )
@@ -255,12 +265,15 @@ fun SongDetailsScreen(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(36.dp)
-                )
+                if (isSongBuffering)
+                    CircularProgressIndicator(color = AppBackground)
+                else
+                    Icon(
+                        imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(36.dp)
+                    )
             }
 
             IconButton(

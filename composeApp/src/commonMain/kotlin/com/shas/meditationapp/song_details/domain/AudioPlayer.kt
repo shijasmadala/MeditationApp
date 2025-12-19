@@ -13,4 +13,5 @@ interface AudioPlayer {
     val isPlaying: StateFlow<Boolean>
     val currentPosition: StateFlow<Long>
     val duration: StateFlow<Long>
+    val isBuffering: StateFlow<Boolean>
 }

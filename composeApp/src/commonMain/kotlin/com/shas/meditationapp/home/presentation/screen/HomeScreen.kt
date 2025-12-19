@@ -154,7 +154,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel(), navController: NavCon
 
                                 Row {
                                     Text(
-                                        text = UiUtils.formatDuration(track?.duration ?: 0),
+                                        text = UiUtils.formatDuration(track?.duration?.toLong() ?: 0),
                                         color = Color.White
                                     )
                                     Spacer(modifier = Modifier.width(5.dp))

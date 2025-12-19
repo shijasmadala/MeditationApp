@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,12 +35,18 @@ class AndroidAudioPlayer(
 
     private val _duration = MutableStateFlow(0L)
     override val duration: StateFlow<Long> = _duration
+
+    private val _isBuffering = MutableStateFlow(false)
+    override val isBuffering: StateFlow<Boolean> = _isBuffering
+
     private var currentUrl: String? = null
     override fun play(url: String) {
+        _isBuffering.value = true
         // ▶️ Resume case
         if (mediaPlayer != null && currentUrl == url) {
             mediaPlayer?.start()
             _isPlaying.value = true
+            _isBuffering.value = false
             startProgressUpdates()
             return
         }
@@ -65,17 +70,33 @@ class AndroidAudioPlayer(
                 _duration.value = mp.duration.toLong()
                 mp.start()
                 _isPlaying.value = true
+                _isBuffering.value = false
                 startProgressUpdates()
             }
 
             setOnCompletionListener {
                 _isPlaying.value = false
+                _isBuffering.value = false
                 stopProgressUpdates()
             }
 
             setOnErrorListener { _, _, _ ->
                 _isPlaying.value = false
+                _isBuffering.value = false
                 stopProgressUpdates()
+                true
+            }
+
+            setOnInfoListener { _, what, _ ->
+                when (what) {
+                    MediaPlayer.MEDIA_INFO_BUFFERING_START -> {
+                        _isBuffering.value = true
+                    }
+
+                    MediaPlayer.MEDIA_INFO_BUFFERING_END -> {
+                        _isBuffering.value = false
+                    }
+                }
                 true
             }
 
@@ -86,12 +107,14 @@ class AndroidAudioPlayer(
     override fun pause() {
         mediaPlayer?.pause()
         _isPlaying.value = false
+        _isBuffering.value = false
         stopProgressUpdates()
     }
 
     override fun stop() {
         mediaPlayer?.stop()
         _isPlaying.value = false
+        _isBuffering.value = false
         stopProgressUpdates()
     }
 
@@ -101,7 +124,6 @@ class AndroidAudioPlayer(
 
     override fun release() {
         releaseInternal()
-        playerScope.cancel()
     }
 
     override fun reset() {

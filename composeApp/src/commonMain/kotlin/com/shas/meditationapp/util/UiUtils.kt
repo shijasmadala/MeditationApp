@@ -3,10 +3,17 @@ package com.shas.meditationapp.util
 import androidx.compose.ui.graphics.Color
 
 object UiUtils {
-    fun formatDuration(seconds: Int): String {
+    fun formatDuration(seconds: Long): String {
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60
         return minutes.toString() + ":" + remainingSeconds.toString().padStart(2, '0')
+    }
+
+    fun formatTime(ms: Long): String {
+        val totalSeconds = ms / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return "$minutes:${seconds.toString().padStart(2, '0')}"
     }
 
     data class Genre(

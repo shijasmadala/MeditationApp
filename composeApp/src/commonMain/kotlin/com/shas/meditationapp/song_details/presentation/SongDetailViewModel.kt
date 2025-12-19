@@ -7,7 +7,10 @@ import com.shas.meditationapp.core.domain.onSuccess
 import com.shas.meditationapp.song_details.domain.AudioPlayer
 import com.shas.meditationapp.song_details.domain.repository.SongDetailsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -22,6 +25,7 @@ class SongDetailViewModel(
     val isPlaying: StateFlow<Boolean> = audioPlayer.isPlaying
     val position: StateFlow<Long> = audioPlayer.currentPosition
     val duration: StateFlow<Long> = audioPlayer.duration
+    val isBuffering = audioPlayer.isBuffering
 
     fun play(url: String?) = audioPlayer.play(url ?: "")
     fun pause() = audioPlayer.pause()
@@ -52,4 +56,25 @@ class SongDetailViewModel(
         audioPlayer.reset()
         _songDetailState.value = SongDetailState() // clear UI state
     }
+
+    //
+    val songTimer: StateFlow<Long> =
+        combine(
+            audioPlayer.duration,
+            audioPlayer.currentPosition
+        ) { duration, position ->
+            (duration - position).coerceAtLeast(0L)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0L
+        )
+
+    val elapsedTime: StateFlow<Long> =
+        audioPlayer.currentPosition
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                0L
+            )
 }

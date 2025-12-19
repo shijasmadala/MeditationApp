@@ -84,7 +84,7 @@ fun SongItemScreen(trackItem: ResultModel?, onItemClick: (ResultModel?) -> Unit)
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
-                        text = UiUtils.formatDuration(trackItem?.duration ?: 0),
+                        text = UiUtils.formatDuration(trackItem?.duration?.toLong() ?: 0),
                         color = Color.Gray,
                         style = MaterialTheme.typography.bodySmall
                     )
