@@ -1,6 +1,7 @@
 package com.shas.meditationapp.explore.presentation.screen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,8 +25,11 @@ import coil3.compose.AsyncImage
 import com.shas.meditationapp.explore.domain.model.AlbumResultModel
 
 @Composable
-fun PopularPlayListScreen(track: AlbumResultModel?) {
-    Column(modifier = Modifier.padding(10.dp), horizontalAlignment = Alignment.Start) {
+fun PopularPlayListScreen(track: AlbumResultModel?, onItemClick: (AlbumResultModel?) -> Unit) {
+    Column(
+        modifier = Modifier.padding(10.dp).clickable { onItemClick.invoke(track) },
+        horizontalAlignment = Alignment.Start
+    ) {
         Box(
             modifier = Modifier
                 .width(150.dp)

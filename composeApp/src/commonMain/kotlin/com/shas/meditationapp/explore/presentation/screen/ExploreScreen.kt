@@ -42,6 +42,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import com.shas.meditationapp.app.Route
 import com.shas.meditationapp.explore.presentation.ExploreViewModel
 import com.shas.meditationapp.explore.presentation.screen.components.GenresCardsView
 import com.shas.meditationapp.explore.presentation.screen.components.NewReleasesView
@@ -56,7 +58,7 @@ import com.shas.meditationapp.util.UiUtils.genres
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ExploreScreen(viewModel: ExploreViewModel = koinViewModel()) {
+fun ExploreScreen(navController: NavController, viewModel: ExploreViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         Box(
@@ -102,7 +104,9 @@ fun ExploreScreen(viewModel: ExploreViewModel = koinViewModel()) {
             LazyRow {
                 state.trendingTrack?.results?.let { items ->
                     items(items) {
-                        TrendingTrackTrackScreen(it)
+                        TrendingTrackTrackScreen(it, onItemClick = { item ->
+                            navController.navigate(Route.SongDetailsScreen(item?.id ?: ""))
+                        })
                     }
                 }
             }
@@ -119,7 +123,9 @@ fun ExploreScreen(viewModel: ExploreViewModel = koinViewModel()) {
             LazyRow {
                 state.popularAlbum?.results?.let { albums ->
                     items(albums) {
-                        NewReleasesView(it)
+                        NewReleasesView(it, onItemClick = { item ->
+                            navController.navigate(Route.SongDetailsScreen(item?.id ?: ""))
+                        })
                     }
                 }
             }
@@ -137,7 +143,9 @@ fun ExploreScreen(viewModel: ExploreViewModel = koinViewModel()) {
             LazyRow {
                 state.popularPlayList?.results?.let { playList ->
                     items(items = playList) { item ->
-                        PopularPlayListScreen(item)
+                        PopularPlayListScreen(item, onItemClick = { data ->
+                            navController.navigate(Route.SongDetailsScreen(data?.id ?: ""))
+                        })
                     }
                 }
             }

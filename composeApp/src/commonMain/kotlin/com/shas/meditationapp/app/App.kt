@@ -84,7 +84,7 @@ fun App() {
                     }
 
                     composable<Route.ExploreScreen> {
-                        ExploreScreen()
+                        ExploreScreen(navController)
                     }
 
                     composable<Route.FavoritesScreen> {

@@ -1,6 +1,7 @@
 package com.shas.meditationapp.explore.presentation.screen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,8 +25,11 @@ import coil3.compose.AsyncImage
 import com.shas.meditationapp.home.domain.model.ResultModel
 
 @Composable
-fun TrendingTrackTrackScreen(itemTrack: ResultModel?) {
-    Column(modifier = Modifier.padding(10.dp), horizontalAlignment = Alignment.Start) {
+fun TrendingTrackTrackScreen(itemTrack: ResultModel?, onItemClick: (ResultModel?) -> Unit) {
+    Column(
+        modifier = Modifier.padding(10.dp).clickable { onItemClick.invoke(itemTrack) },
+        horizontalAlignment = Alignment.Start
+    ) {
         Box(
             modifier = Modifier
                 .width(150.dp)
