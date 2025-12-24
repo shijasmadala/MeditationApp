@@ -28,7 +28,7 @@ import com.shas.meditationapp.explore.domain.model.AlbumResultModel
 @Composable
 fun NewReleasesView(trackItem: AlbumResultModel?, onItemClick: (AlbumResultModel?) -> Unit) {
     Column(
-        modifier = Modifier.padding(10.dp).clickable { onItemClick.invoke(trackItem) },
+        modifier = Modifier.padding(10.dp).width(110.dp).clickable { onItemClick.invoke(trackItem) },
         horizontalAlignment = Alignment.Start
     ) {
         Box(

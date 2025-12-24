@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.shas.meditationapp.home.domain.model.ResultModel
@@ -57,10 +58,12 @@ fun SongItemScreen(trackItem: ResultModel?, onItemClick: (ResultModel?) -> Unit)
                 )
 
                 Column(modifier = Modifier.padding(start = 10.dp)) {
-                    Text(
-                        trackItem?.name ?: "",
+                    Text(modifier = Modifier.width(200.dp),
+                        text = trackItem?.name ?: "",
                         color = Color.White,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         trackItem?.releaseDate ?: "",

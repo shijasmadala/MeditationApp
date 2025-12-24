@@ -51,6 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.shas.meditationapp.PlatformBackHandler
+import com.shas.meditationapp.home.domain.model.ResultModel
 import com.shas.meditationapp.song_details.presentation.SongDetailViewModel
 import com.shas.meditationapp.ui.theme.AppBackground
 import com.shas.meditationapp.util.UiUtils
@@ -78,6 +79,7 @@ fun SongDetailsScreen(
 
     var sliderPosition by remember { mutableStateOf(0f) }
     var isDragging by remember { mutableStateOf(false) }
+    var songItem : ResultModel? = null
 
     LaunchedEffect(position, duration, isDragging) {
         if (!isDragging && duration > 0) {
@@ -85,7 +87,9 @@ fun SongDetailsScreen(
         }
     }
 
-    val songItem = state.songDetail?.results?.get(0)
+    if (state.songDetail?.results?.isNotEmpty() == true) {
+         songItem = state.songDetail?.results?.get(0)!!
+    }
 
     LaunchedEffect(Unit) {
         viewModel.getTrackById(trackId)

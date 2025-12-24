@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -27,7 +28,8 @@ import com.shas.meditationapp.home.domain.model.ResultModel
 @Composable
 fun TrendingTrackTrackScreen(itemTrack: ResultModel?, onItemClick: (ResultModel?) -> Unit) {
     Column(
-        modifier = Modifier.padding(10.dp).clickable { onItemClick.invoke(itemTrack) },
+        modifier = Modifier.padding(10.dp).width(150.dp)
+            .clickable { onItemClick.invoke(itemTrack) },
         horizontalAlignment = Alignment.Start
     ) {
         Box(
@@ -52,7 +54,7 @@ fun TrendingTrackTrackScreen(itemTrack: ResultModel?, onItemClick: (ResultModel?
             fontSize = 12.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(start = 8.dp)
+            modifier = Modifier.padding(start = 8.dp).fillMaxWidth()
         )
 
         Text(

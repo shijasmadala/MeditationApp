@@ -27,7 +27,7 @@ import com.shas.meditationapp.explore.domain.model.AlbumResultModel
 @Composable
 fun PopularPlayListScreen(track: AlbumResultModel?, onItemClick: (AlbumResultModel?) -> Unit) {
     Column(
-        modifier = Modifier.padding(10.dp).clickable { onItemClick.invoke(track) },
+        modifier = Modifier.padding(10.dp).width(150.dp).clickable { onItemClick.invoke(track) },
         horizontalAlignment = Alignment.Start
     ) {
         Box(
