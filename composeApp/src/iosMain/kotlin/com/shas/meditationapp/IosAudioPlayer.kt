@@ -23,6 +23,9 @@ class IosAudioPlayer : AudioPlayer {
     private val _duration = MutableStateFlow(0L)
     override val duration: StateFlow<Long> = _duration
 
+    private val _isBuffering = MutableStateFlow(false)
+    override val isBuffering: StateFlow<Boolean> = _isBuffering
+
     @OptIn(ExperimentalForeignApi::class)
     override fun play(url: String) {
         val nslUrl = NSURL.URLWithString(url) ?: return
@@ -50,5 +53,9 @@ class IosAudioPlayer : AudioPlayer {
 
     override fun release() {
         player = null
+    }
+
+    override fun reset() {
+        TODO("Not yet implemented")
     }
 }

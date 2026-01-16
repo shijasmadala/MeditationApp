@@ -9,9 +9,12 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -35,10 +38,12 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App() {
     AppTheme {
         val navController = rememberNavController()
+        val snackBarHostState = remember { SnackbarHostState() }
 
         Scaffold(
             containerColor = AppBackground,
             contentWindowInsets = WindowInsets(top = 0),
+            snackbarHost = { SnackbarHost(snackBarHostState) },
             bottomBar = {
                 NavigationBar(
                     modifier = Modifier.height(100.dp),
@@ -97,7 +102,11 @@ fun App() {
 
                     composable<Route.SongDetailsScreen> {
                         val args = it.toRoute<Route.SongDetailsScreen>()
-                        SongDetailsScreen(trackId = args.trackId, navController = navController)
+                        SongDetailsScreen(
+                            trackId = args.trackId,
+                            navController = navController,
+                            snackbarHostState = snackBarHostState
+                        )
                     }
                 }
             }
