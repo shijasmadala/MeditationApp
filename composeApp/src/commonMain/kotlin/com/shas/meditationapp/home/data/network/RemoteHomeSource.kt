@@ -30,4 +30,11 @@ interface RemoteHomeSource {
         trackId: String?,
         clientId: String,
     ): Result<HomeTrackResponseDto, DataError.Remote>
+
+    suspend fun searchTrackByNameAndArtist(
+        clientId: String,
+        formate: String,
+        nameSearch: String,
+        artistName: String
+    ) : Result<HomeTrackResponseDto, DataError.Remote>
 }

@@ -1,6 +1,7 @@
 package com.shas.meditationapp.explore.presentation.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.GeneratingTokens
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.NewReleases
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -88,6 +90,14 @@ fun ExploreScreen(navController: NavController, viewModel: ExploreViewModel = ko
                             "Search tracks,artists,playlists",
                             color = Color.Gray,
                             style = MaterialTheme.typography.bodyMedium
+                        )
+                    }, trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "",
+                            modifier = Modifier.clickable(onClick = {
+                                navController.navigate(Route.SearchScreen)
+                            })
                         )
                     })
             }

@@ -7,6 +7,8 @@ import com.shas.meditationapp.explore.data.toAlbumModel
 import com.shas.meditationapp.explore.domain.model.AlbumResponseModel
 import com.shas.meditationapp.explore.domain.repository.ExploreRepository
 import com.shas.meditationapp.home.data.network.RemoteHomeSource
+import com.shas.meditationapp.home.data.toHomeTrackRespModel
+import com.shas.meditationapp.home.domain.model.HomeTrackRespModel
 import com.shas.meditationapp.util.Constants
 
 class ExploreRepositoryImpl(private val remoteHomeSource: RemoteHomeSource) : ExploreRepository {
@@ -22,5 +24,19 @@ class ExploreRepositoryImpl(private val remoteHomeSource: RemoteHomeSource) : Ex
         ).map {
             it.toAlbumModel()
         }
+    }
+
+    override suspend fun searchTrackByNameAndArtist(
+        clientId: String,
+        formate: String,
+        nameSearch: String,
+        artistName: String
+    ): Result<HomeTrackRespModel, DataError.Remote> {
+        return remoteHomeSource.searchTrackByNameAndArtist(
+            clientId = Constants.CLIENT_ID,
+            formate = "jsonpretty",
+            nameSearch = nameSearch,
+            artistName = artistName
+        ).map { it.toHomeTrackRespModel() }
     }
 }

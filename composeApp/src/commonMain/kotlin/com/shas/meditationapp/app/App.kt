@@ -26,6 +26,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.shas.meditationapp.ProfileScreen
 import com.shas.meditationapp.explore.presentation.screen.ExploreScreen
+import com.shas.meditationapp.explore.presentation.screen.components.SearchScreen
 import com.shas.meditationapp.favorites.FavoritesScreen
 import com.shas.meditationapp.home.presentation.screen.HomeScreen
 import com.shas.meditationapp.ui.theme.AppBackground
@@ -107,6 +108,10 @@ fun App() {
                             navController = navController,
                             snackbarHostState = snackBarHostState
                         )
+                    }
+
+                    composable<Route.SearchScreen> {
+                        SearchScreen()
                     }
                 }
             }
