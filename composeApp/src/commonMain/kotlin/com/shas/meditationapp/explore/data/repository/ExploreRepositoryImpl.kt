@@ -27,8 +27,6 @@ class ExploreRepositoryImpl(private val remoteHomeSource: RemoteHomeSource) : Ex
     }
 
     override suspend fun searchTrackByNameAndArtist(
-        clientId: String,
-        formate: String,
         nameSearch: String,
         artistName: String
     ): Result<HomeTrackRespModel, DataError.Remote> {

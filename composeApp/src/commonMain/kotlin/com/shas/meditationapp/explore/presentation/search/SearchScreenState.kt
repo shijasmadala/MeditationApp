@@ -1,4 +1,4 @@
-package com.shas.meditationapp.explore.presentation
+package com.shas.meditationapp.explore.presentation.search
 
 import com.shas.meditationapp.home.domain.model.HomeTrackRespModel
 
