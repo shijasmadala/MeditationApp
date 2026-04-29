@@ -111,7 +111,7 @@ fun App() {
                     }
 
                     composable<Route.SearchScreen> {
-                        SearchScreen()
+                        SearchScreen(onBackClick = { navController.navigateUp() })
                     }
                 }
             }
