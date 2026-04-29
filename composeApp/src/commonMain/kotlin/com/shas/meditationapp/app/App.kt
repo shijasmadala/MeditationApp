@@ -114,7 +114,8 @@ fun App() {
                         val args = it.toRoute<Route.SearchScreen>()
                         SearchScreen(
                             onBackClick = { navController.navigateUp() },
-                            searchQuery = args.searchQuery
+                            searchQuery = args.searchQuery,
+                            navController = navController
                         )
                     }
                 }

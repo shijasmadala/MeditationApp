@@ -1,6 +1,7 @@
 package com.shas.meditationapp.explore.presentation.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,17 +42,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.shas.meditationapp.app.Route
 import com.shas.meditationapp.explore.presentation.search.SearchScreenViewModel
 import com.shas.meditationapp.home.domain.model.ResultModel
 import com.shas.meditationapp.ui.theme.AppBackground
 import com.shas.meditationapp.util.UiUtils
+import com.shas.meditationapp.util.VerticalHomeShimmer
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
+    navController: NavController,
     searchQuery: String?,
     viewModel: SearchScreenViewModel = koinViewModel(
         parameters = { parametersOf(searchQuery) }
@@ -89,29 +94,35 @@ fun SearchScreen(
                 actionIconContentColor = Color.Unspecified
             )
         )
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            state.searchedTrack?.results?.let { items ->
-                items(items) { item ->
-                    SearchedItem(item)
+        if (state.loading) VerticalHomeShimmer() else
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                state.searchedTrack?.results?.let { items ->
+                    items(items) { item ->
+                        SearchedItem(item) {
+                            navController.navigate(Route.SongDetailsScreen(it?.id ?: ""))
+                        }
+                    }
                 }
             }
-        }
     }
 }
 
 @Composable
-fun SearchedItem(result: ResultModel?) {
+fun SearchedItem(result: ResultModel?, onItemClick: (ResultModel?) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(112.dp),
+            .height(112.dp)
+            .clickable(onClick = {
+                onItemClick.invoke(result)
+            }),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF1B1F31))
     ) {
