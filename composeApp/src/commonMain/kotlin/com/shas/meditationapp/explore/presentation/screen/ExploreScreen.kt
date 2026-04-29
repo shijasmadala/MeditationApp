@@ -189,7 +189,10 @@ fun ExploreScreen(navController: NavController, viewModel: ExploreViewModel = ko
                     emoji = it.emoji,
                     title = it.title,
                     subtitle = it.subtitle,
-                    gradient = it.gradient
+                    gradient = it.gradient,
+                    onItemClick = {
+                        navController.navigate(Route.SearchScreen(it.title))
+                    }
                 )
             }
         }

@@ -35,6 +35,5 @@ interface RemoteHomeSource {
         clientId: String,
         formate: String,
         nameSearch: String,
-        artistName: String
     ) : Result<HomeTrackResponseDto, DataError.Remote>
 }

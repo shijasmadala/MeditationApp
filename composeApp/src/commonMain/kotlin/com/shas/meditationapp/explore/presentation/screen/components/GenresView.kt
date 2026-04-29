@@ -1,6 +1,7 @@
 package com.shas.meditationapp.explore.presentation.screen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +24,8 @@ fun GenresCardsView(
     emoji: String,
     title: String,
     subtitle: String,
-    gradient: List<Color>
+    gradient: List<Color>,
+    onItemClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -34,6 +36,7 @@ fun GenresCardsView(
                 brush = Brush.linearGradient(gradient)
             )
             .padding(16.dp)
+            .clickable(onClick = { onItemClick.invoke() })
     ) {
         Column {
             Text(

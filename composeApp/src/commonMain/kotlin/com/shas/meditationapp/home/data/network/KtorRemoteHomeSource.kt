@@ -82,7 +82,6 @@ class KtorRemoteHomeSource(private val httpClient: HttpClient) : RemoteHomeSourc
         clientId: String,
         formate: String,
         nameSearch: String,
-        artistName: String
     ): Result<HomeTrackResponseDto, DataError.Remote> {
         return safeCall<HomeTrackResponseDto> {
             httpClient.get(
@@ -91,7 +90,7 @@ class KtorRemoteHomeSource(private val httpClient: HttpClient) : RemoteHomeSourc
                 parameter("client_id", clientId)
                 parameter("format", formate)
                 parameter("namesearch", nameSearch)
-                parameter("artist_name", artistName)
+                parameter("limit", "20")
             }
         }
     }

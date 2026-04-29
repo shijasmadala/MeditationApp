@@ -33,7 +33,6 @@ class ExploreRepositoryImpl(private val remoteHomeSource: RemoteHomeSource) : Ex
             clientId = Constants.CLIENT_ID,
             formate = "jsonpretty",
             nameSearch = nameSearch,
-            artistName = nameSearch
         ).map { it.toHomeTrackRespModel() }
     }
 }
