@@ -28,13 +28,12 @@ class ExploreRepositoryImpl(private val remoteHomeSource: RemoteHomeSource) : Ex
 
     override suspend fun searchTrackByNameAndArtist(
         nameSearch: String,
-        artistName: String
     ): Result<HomeTrackRespModel, DataError.Remote> {
         return remoteHomeSource.searchTrackByNameAndArtist(
             clientId = Constants.CLIENT_ID,
             formate = "jsonpretty",
             nameSearch = nameSearch,
-            artistName = artistName
+            artistName = nameSearch
         ).map { it.toHomeTrackRespModel() }
     }
 }

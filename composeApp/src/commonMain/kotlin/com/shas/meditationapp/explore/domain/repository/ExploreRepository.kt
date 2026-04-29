@@ -14,6 +14,5 @@ interface ExploreRepository {
 
     suspend fun searchTrackByNameAndArtist(
         nameSearch: String,
-        artistName: String
     ): Result<HomeTrackRespModel, DataError.Remote>
 }

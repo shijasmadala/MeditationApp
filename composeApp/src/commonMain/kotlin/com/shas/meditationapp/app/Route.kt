@@ -22,6 +22,6 @@ interface Route {
     data class SongDetailsScreen(val trackId: String) : Route
 
     @Serializable
-    data object SearchScreen : Route
+    data class SearchScreen(val searchQuery: String?) : Route
 
 }

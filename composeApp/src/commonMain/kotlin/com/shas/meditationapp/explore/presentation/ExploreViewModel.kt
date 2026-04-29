@@ -13,14 +13,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ExploreViewModel(
-    private val homeRepository: HomeRepository,
-    private val exploreRepository: ExploreRepository
+    private val homeRepository: HomeRepository, private val exploreRepository: ExploreRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(ExploreUiState())
     val state = _state
 
     init {
         loadData()
+    }
+
+    fun onEvent(event: ExploreEvents) {
+        when (event) {
+            is ExploreEvents.OnSearch -> {
+                _state.update { it.copy(searchQuery = event.query) }
+            }
+        }
     }
 
 
@@ -40,18 +47,14 @@ class ExploreViewModel(
 
     suspend fun getTrendingTrack() {
         homeRepository.getTrendingTrack(
-            clientId = CLIENT_ID,
-            formate = "json",
-            order = "popularity_total"
+            clientId = CLIENT_ID, formate = "json", order = "popularity_total"
         ).onSuccess { resp ->
             _state.update {
-                it
-                    .copy(loading = false, error = null, trendingTrack = resp)
+                it.copy(loading = false, error = null, trendingTrack = resp)
             }
         }.onError { error ->
             _state.update {
-                it
-                    .copy(loading = false, error = error.name)
+                it.copy(loading = false, error = error.name)
             }
         }
     }
@@ -60,13 +63,11 @@ class ExploreViewModel(
         exploreRepository.getPopularAlbums(order = "popularity_week", limit = "20")
             .onSuccess { resp ->
                 _state.update {
-                    it
-                        .copy(loading = false, error = null, popularAlbum = resp)
+                    it.copy(loading = false, error = null, popularAlbum = resp)
                 }
             }.onError { error ->
                 _state.update {
-                    it
-                        .copy(loading = false, error = error.name)
+                    it.copy(loading = false, error = error.name)
                 }
             }
     }
@@ -75,13 +76,11 @@ class ExploreViewModel(
         exploreRepository.getPopularAlbums(order = "popularity_total", limit = "20")
             .onSuccess { resp ->
                 _state.update {
-                    it
-                        .copy(loading = false, error = null, popularPlayList = resp)
+                    it.copy(loading = false, error = null, popularPlayList = resp)
                 }
             }.onError { error ->
                 _state.update {
-                    it
-                        .copy(loading = false, error = error.name)
+                    it.copy(loading = false, error = error.name)
                 }
             }
     }

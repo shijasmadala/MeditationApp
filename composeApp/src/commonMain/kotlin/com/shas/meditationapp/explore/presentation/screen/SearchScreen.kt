@@ -47,11 +47,15 @@ import com.shas.meditationapp.home.domain.model.ResultModel
 import com.shas.meditationapp.ui.theme.AppBackground
 import com.shas.meditationapp.util.UiUtils
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    viewModel: SearchScreenViewModel = koinViewModel(),
+    searchQuery: String?,
+    viewModel: SearchScreenViewModel = koinViewModel(
+        parameters = { parametersOf(searchQuery) }
+    ),
     onBackClick: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

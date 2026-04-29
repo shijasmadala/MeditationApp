@@ -111,7 +111,11 @@ fun App() {
                     }
 
                     composable<Route.SearchScreen> {
-                        SearchScreen(onBackClick = { navController.navigateUp() })
+                        val args = it.toRoute<Route.SearchScreen>()
+                        SearchScreen(
+                            onBackClick = { navController.navigateUp() },
+                            searchQuery = args.searchQuery
+                        )
                     }
                 }
             }

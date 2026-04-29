@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.shas.meditationapp.app.Route
+import com.shas.meditationapp.explore.presentation.ExploreEvents
 import com.shas.meditationapp.explore.presentation.ExploreViewModel
 import com.shas.meditationapp.explore.presentation.screen.components.GenresCardsView
 import com.shas.meditationapp.explore.presentation.screen.components.NewReleasesView
@@ -77,13 +78,19 @@ fun ExploreScreen(navController: NavController, viewModel: ExploreViewModel = ko
                 Text("Explore", color = Color.White)
 
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
-                    modifier = Modifier.fillMaxWidth().padding(10.dp).height(50.dp),
+                    value = state.searchQuery,
+                    onValueChange = { viewModel.onEvent(ExploreEvents.OnSearch(it)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .height(50.dp),
                     shape = CircleShape,
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = AppBackground.copy(alpha = 0.3f),
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
+                        cursorColor = Color.White,
                         focusedContainerColor = AppBackground.copy(alpha = 0.3f),
+                        unfocusedContainerColor = AppBackground.copy(alpha = 0.3f),
                     ),
                     placeholder = {
                         Text(
@@ -91,15 +98,18 @@ fun ExploreScreen(navController: NavController, viewModel: ExploreViewModel = ko
                             color = Color.Gray,
                             style = MaterialTheme.typography.bodyMedium
                         )
-                    }, trailingIcon = {
+                    },
+                    trailingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = "",
-                            modifier = Modifier.clickable(onClick = {
-                                navController.navigate(Route.SearchScreen)
-                            })
+                            tint = Color.White, // optional (icon color)
+                            modifier = Modifier.clickable {
+                                navController.navigate(Route.SearchScreen(state.searchQuery))
+                            }
                         )
-                    })
+                    }
+                )
             }
         }
         Spacer(modifier = Modifier.height(12.dp))

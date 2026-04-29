@@ -9,17 +9,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SearchScreenViewModel(private val exploreRepository: ExploreRepository) : ViewModel() {
+class SearchScreenViewModel(private val exploreRepository: ExploreRepository,private val searchQuery: String?) : ViewModel() {
     private val _state = MutableStateFlow(SearchScreenState())
     val state = _state
 
     init {
-        getSearchData("meditation", "")
+        getSearchData(searchQuery)
     }
 
-    private fun getSearchData(name: String, artist: String) = viewModelScope.launch {
+    private fun getSearchData(name: String?) = viewModelScope.launch {
         _state.value = _state.value.copy(loading = true)
-        exploreRepository.searchTrackByNameAndArtist(nameSearch = name, artistName = artist)
+        exploreRepository.searchTrackByNameAndArtist(nameSearch = name ?:"")
             .onSuccess { resp ->
                 _state.update { it.copy(loading = false, searchedTrack = resp) }
             }.onError { resp ->
