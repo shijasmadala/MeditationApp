@@ -19,51 +19,84 @@ class SongDetailViewModel(
     private val songDetailsRepository: SongDetailsRepository
 ) : ViewModel() {
 
-    private var _songDetailState = MutableStateFlow(SongDetailState())
+    private val _songDetailState = MutableStateFlow(SongDetailState())
     val songDetailState = _songDetailState
+
+    private val _miniPlayerDismissed = MutableStateFlow(false)
 
     val isPlaying: StateFlow<Boolean> = audioPlayer.isPlaying
     val position: StateFlow<Long> = audioPlayer.currentPosition
     val duration: StateFlow<Long> = audioPlayer.duration
     val isBuffering = audioPlayer.isBuffering
 
-    fun play(url: String?) = audioPlayer.play(url ?: "")
+    val showMiniPlayer: StateFlow<Boolean> = combine(
+        _miniPlayerDismissed,
+        _songDetailState,
+        audioPlayer.isPlaying,
+        audioPlayer.currentPosition,
+        audioPlayer.duration
+    ) { dismissed, state, playing, pos, dur ->
+        val hasTrack = state.songDetail?.results?.firstOrNull() != null
+        val hasProgress = dur > 0L && (playing || pos > 0L)
+        !dismissed && hasTrack && hasProgress
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false
+    )
+
+    fun play(url: String?) {
+        _miniPlayerDismissed.value = false
+        audioPlayer.play(url ?: "")
+    }
+
     fun pause() = audioPlayer.pause()
     fun seekTo(ms: Long) = audioPlayer.seekTo(ms)
+
     override fun onCleared() {
-        audioPlayer.release()
+        // AudioPlayer is a process-wide singleton; do not release here so playback
+        // survives navigation when this ViewModel is scoped to MainNavGraph.
     }
 
     fun getTrackById(trackId: String?) = viewModelScope.launch {
-        _songDetailState.update {
-            it
-                .copy(loading = true)
+        val prevId = _songDetailState.value.activeTrackId
+        if (!trackId.isNullOrBlank() && prevId != null && prevId != trackId) {
+            audioPlayer.reset()
+            _songDetailState.value = SongDetailState(loading = true)
+        } else {
+            _songDetailState.update { it.copy(loading = true, error = null) }
         }
+        if (prevId != trackId) {
+            _miniPlayerDismissed.value = false
+        }
+
         songDetailsRepository.getTrackById(trackId).onSuccess { resp ->
             _songDetailState.update {
-                it
-                    .copy(loading = false, songDetail = resp)
+                it.copy(
+                    loading = false,
+                    songDetail = resp,
+                    activeTrackId = trackId
+                )
             }
         }.onError { error ->
             _songDetailState.update {
-                it
-                    .copy(loading = false, error = error.name)
+                it.copy(loading = false, error = error.name)
             }
         }
     }
 
-    fun onExitScreen() {
+    fun dismissMiniPlayer() {
         audioPlayer.reset()
-        _songDetailState.value = SongDetailState() // clear UI state
+        _miniPlayerDismissed.value = true
+        _songDetailState.value = SongDetailState()
     }
 
-    //
     val songTimer: StateFlow<Long> =
         combine(
             audioPlayer.duration,
             audioPlayer.currentPosition
-        ) { duration, position ->
-            (duration - position).coerceAtLeast(0L)
+        ) { dur, pos ->
+            (dur - pos).coerceAtLeast(0L)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),

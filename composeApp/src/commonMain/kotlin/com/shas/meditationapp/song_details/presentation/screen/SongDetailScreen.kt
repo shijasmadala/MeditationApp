@@ -53,6 +53,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.shas.meditationapp.PlatformBackHandler
+import com.shas.meditationapp.app.rememberMainNavBackStackEntry
 import com.shas.meditationapp.home.domain.model.ResultModel
 import com.shas.meditationapp.song_details.presentation.SongDetailViewModel
 import com.shas.meditationapp.ui.theme.AppBackground
@@ -63,7 +64,9 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SongDetailsScreen(
     navController: NavController,
-    viewModel: SongDetailViewModel = koinViewModel(),
+    viewModel: SongDetailViewModel = koinViewModel(
+        viewModelStoreOwner = rememberMainNavBackStackEntry(navController)
+    ),
     trackId: String?,
     snackbarHostState: SnackbarHostState
 ) {
@@ -76,7 +79,6 @@ fun SongDetailsScreen(
     val isSongBuffering by viewModel.isBuffering.collectAsState()
 
     PlatformBackHandler {
-        viewModel.onExitScreen()
         navController.popBackStack()
     }
 
@@ -94,7 +96,7 @@ fun SongDetailsScreen(
         songItem = state.songDetail?.results?.get(0)!!
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(trackId) {
         viewModel.getTrackById(trackId)
     }
 
@@ -127,10 +129,7 @@ fun SongDetailsScreen(
                 )
             },
             navigationIcon = {
-                IconButton(onClick = {
-                    viewModel.onExitScreen()
-                    navController.popBackStack()
-                }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",

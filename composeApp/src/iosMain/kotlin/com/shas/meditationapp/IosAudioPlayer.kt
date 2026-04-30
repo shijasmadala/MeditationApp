@@ -56,6 +56,11 @@ class IosAudioPlayer : AudioPlayer {
     }
 
     override fun reset() {
-        TODO("Not yet implemented")
+        player?.pause()
+        player = null
+        _isPlaying.value = false
+        _currentPosition.value = 0L
+        _duration.value = 0L
+        _isBuffering.value = false
     }
 }
