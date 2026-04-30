@@ -109,8 +109,8 @@ fun App() {
                 val showMiniPlayer by songDetailViewModel.showMiniPlayer.collectAsStateWithLifecycle()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
-                val isSongDetailsRoute =
-                    currentRoute == Route.SongDetailsScreen::class.qualifiedName
+                val isSongDetailsRoute = currentRoute
+                    ?.startsWith(Route.SongDetailsScreen::class.qualifiedName ?: "") == true
 
                 if (showMiniPlayer && !isSongDetailsRoute) {
                     MiniPlayerBar(
