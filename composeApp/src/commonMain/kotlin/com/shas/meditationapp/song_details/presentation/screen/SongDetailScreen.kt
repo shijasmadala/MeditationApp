@@ -129,7 +129,7 @@ fun SongDetailsScreen(
             navigationIcon = {
                 IconButton(onClick = {
                     viewModel.onExitScreen()
-                    navController.popBackStack()
+                    navController.navigateUp()
                 }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
