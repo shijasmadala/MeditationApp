@@ -23,24 +23,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.shas.meditationapp.home.domain.model.ResultModel
+import com.shas.meditationapp.explore.domain.model.AlbumResultModel
 
 @Composable
-fun TrendingTrackTrackScreen(itemTrack: ResultModel?, onItemClick: (ResultModel?) -> Unit) {
+fun NewReleasesView(trackItem: AlbumResultModel?, onItemClick: (AlbumResultModel?) -> Unit) {
     Column(
-        modifier = Modifier.padding(10.dp).width(150.dp)
-            .clickable { onItemClick.invoke(itemTrack) },
+        modifier = Modifier.padding(10.dp).width(110.dp).clickable { onItemClick.invoke(trackItem) },
         horizontalAlignment = Alignment.Start
     ) {
         Box(
             modifier = Modifier
-                .width(150.dp)
-                .height(150.dp)
+                .width(110.dp)
+                .height(110.dp)
                 .clip(RoundedCornerShape(20.dp))
                 .background(color = Color.Gray.copy(alpha = 0.1f))
         ) {
             AsyncImage(
-                model = itemTrack?.albumImage,
+                model = trackItem?.image,
                 contentDescription = "",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
@@ -49,20 +48,22 @@ fun TrendingTrackTrackScreen(itemTrack: ResultModel?, onItemClick: (ResultModel?
         Spacer(modifier = Modifier.height(5.dp))
 
         Text(
-            itemTrack?.name ?: "Midnight Meditation",
+            text = trackItem?.name.orEmpty(),
             color = Color.White,
             fontSize = 12.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(start = 8.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .fillMaxWidth()
         )
 
+
         Text(
-            itemTrack?.albumName ?: "",
+            trackItem?.releaseDate ?: "",
             color = Color.LightGray,
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(start = 8.dp)
         )
     }
-
 }

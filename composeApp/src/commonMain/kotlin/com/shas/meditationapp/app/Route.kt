@@ -18,4 +18,10 @@ interface Route {
     @Serializable
     data object ProfileScreen : Route
 
+    @Serializable
+    data class SongDetailsScreen(val trackId: String) : Route
+
+    @Serializable
+    data class SearchScreen(val searchQuery: String?) : Route
+
 }

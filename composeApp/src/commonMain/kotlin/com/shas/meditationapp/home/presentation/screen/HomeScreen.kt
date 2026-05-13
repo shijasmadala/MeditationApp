@@ -33,19 +33,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.shas.meditationapp.app.Route
 import com.shas.meditationapp.home.presentation.HomeViewModel
-import com.shas.meditationapp.home.presentation.components.Loader
 import com.shas.meditationapp.home.presentation.components.SongChipView
-import com.shas.meditationapp.ui.theme.AppBackground
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientEnd
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientStart
 import com.shas.meditationapp.util.UiUtils
+import com.shas.meditationapp.util.VerticalHomeShimmer
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = koinViewModel(), navController: NavController) {
 
     val state by viewModel.homeState.collectAsStateWithLifecycle()
     val chipList = listOf("All", "Meditation", "Relaxation")
@@ -77,7 +78,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
             }
         }
 
-        if (state.loading) Loader() else
+        if (state.loading) VerticalHomeShimmer() else
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -153,7 +154,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
 
                                 Row {
                                     Text(
-                                        text = UiUtils.formatDuration(track?.duration ?: 0),
+                                        text = UiUtils.formatDuration(track?.duration?.toLong() ?: 0),
                                         color = Color.White
                                     )
                                     Spacer(modifier = Modifier.width(5.dp))
@@ -181,7 +182,9 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                 /** Song list */
                 state.homeTrack?.results?.let { tracks ->
                     items(tracks) { track ->
-                        SongItemScreen(track)
+                        SongItemScreen(track, onItemClick = {
+                            navController.navigate(Route.SongDetailsScreen(trackId = it?.id ?: ""))
+                        })
                     }
                 }
             }

@@ -1,4 +1,5 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,17 +21,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.shas.meditationapp.home.domain.model.ResultModel
 import com.shas.meditationapp.util.UiUtils
 
 @Composable
-fun SongItemScreen(trackItem: ResultModel?) {
+fun SongItemScreen(trackItem: ResultModel?, onItemClick: (ResultModel?) -> Unit) {
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                onItemClick.invoke(trackItem)
+            }
             .height(110.dp)
             .padding(10.dp)
             .clip(RoundedCornerShape(20.dp))
@@ -53,10 +58,12 @@ fun SongItemScreen(trackItem: ResultModel?) {
                 )
 
                 Column(modifier = Modifier.padding(start = 10.dp)) {
-                    Text(
-                        trackItem?.name ?: "",
+                    Text(modifier = Modifier.width(200.dp),
+                        text = trackItem?.name ?: "",
                         color = Color.White,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         trackItem?.releaseDate ?: "",
@@ -80,7 +87,7 @@ fun SongItemScreen(trackItem: ResultModel?) {
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
-                        text = UiUtils.formatDuration(trackItem?.duration ?: 0),
+                        text = UiUtils.formatDuration(trackItem?.duration?.toLong() ?: 0),
                         color = Color.Gray,
                         style = MaterialTheme.typography.bodySmall
                     )
@@ -89,7 +96,7 @@ fun SongItemScreen(trackItem: ResultModel?) {
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Icon(
-                    imageVector = Icons.Outlined.Favorite,
+                    imageVector = Icons.Outlined.FavoriteBorder,
                     modifier = Modifier.size(20.dp),
                     contentDescription = "",
                     tint = Color.Gray
