@@ -1,6 +1,7 @@
 package com.shas.meditationapp.auth.presentation
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Mediation
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.outlined.AcUnit
@@ -39,6 +39,9 @@ import androidx.navigation.NavController
 import com.shas.meditationapp.app.Route
 import com.shas.meditationapp.home.presentation.components.FeatureChip
 import com.shas.meditationapp.ui.theme.AppBackground
+import meditationapp.composeapp.generated.resources.Res
+import meditationapp.composeapp.generated.resources.google_login
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -103,13 +106,21 @@ fun LoginScreen(navController: NavController) {
                 },
                 shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth().heightIn(58.dp),
+                border = BorderStroke(
+                    1.dp,
+                    Color.White
+                ),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
+                    containerColor = Color.Black,
                 )
             ) {
-                Icon(imageVector = Icons.Default.Mail, contentDescription = "", tint = Color.Blue)
+                Image(
+                    painter = painterResource(Res.drawable.google_login),
+                    contentDescription = "",
+                    modifier = Modifier.size(28.dp)
+                )
                 Spacer(modifier = Modifier.size(8.dp))
-                Text(text = "Continue with google", color = Color.Black)
+                Text(text = "Continue with google", color = Color.White)
             }
 
             Spacer(modifier = Modifier.height(28.dp))
