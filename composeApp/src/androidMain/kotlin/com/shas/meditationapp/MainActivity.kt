@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             App()
-//            Icon(imageVector = Icons.Outlined.Fav)
+//            Icon(imageVector = Icons.Outlined.AcUnit, contentDescription = "")
         }
     }
 }
