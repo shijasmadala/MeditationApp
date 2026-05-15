@@ -1,6 +1,7 @@
 package com.shas.meditationapp.di
 
 
+import com.shas.meditationapp.auth.presentation.AuthViewModel
 import com.shas.meditationapp.core.data.HttpClientFactory
 import com.shas.meditationapp.explore.data.repository.ExploreRepositoryImpl
 import com.shas.meditationapp.explore.domain.repository.ExploreRepository
@@ -33,4 +34,5 @@ val sharedModule = module {
     viewModelOf(::ExploreViewModel)
     viewModelOf(::SongDetailViewModel)
     viewModelOf(::SearchScreenViewModel)
+    viewModelOf(::AuthViewModel)
 }

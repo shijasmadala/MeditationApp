@@ -27,6 +27,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.shas.meditationapp.app.Route
 import com.shas.meditationapp.home.presentation.components.FeatureChip
@@ -42,9 +45,20 @@ import com.shas.meditationapp.ui.theme.AppBackground
 import meditationapp.composeapp.generated.resources.Res
 import meditationapp.composeapp.generated.resources.google_login
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, viewModel: AuthViewModel = koinViewModel()) {
+    val state by viewModel.authState.collectAsStateWithLifecycle()
+    LaunchedEffect(state.userData) {
+        if (state.userData != null) {
+            navController.navigate(Route.HomeScreen) {
+                popUpTo(Route.LoginScreen) {
+                    inclusive = true
+                }
+            }
+        }
+    }
     Box(modifier = Modifier.fillMaxSize().background(AppBackground)) {
         Column(
             modifier = Modifier
@@ -102,7 +116,7 @@ fun LoginScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    navController.navigate(Route.HomeScreen)
+                    viewModel.signIn()
                 },
                 shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth().heightIn(58.dp),
