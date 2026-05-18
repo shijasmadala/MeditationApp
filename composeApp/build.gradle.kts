@@ -1,6 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -37,10 +38,17 @@ kotlin {
         framework {
             baseName = "composeApp"
             isStatic = true
+            // Bridge symbols are implemented in iosApp (GoogleSignInBridge.m).
+            linkerOpts("-Wl", "-undefined", "dynamic_lookup")
         }
-        // linkOnly: Kotlin uses the API; the iosApp Podfile links the native library.
-        pod("GoogleSignIn") {
-            linkOnly = true
+    }
+
+    targets.withType<KotlinNativeTarget>().configureEach {
+        compilations.getByName("main").cinterops {
+            val googleSignInBridge by creating {
+                defFile(project.file("src/nativeInterop/cinterop/GoogleSignInBridge.def"))
+                includeDirs(project.file("src/nativeInterop/cinterop"))
+            }
         }
     }
     
