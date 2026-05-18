@@ -12,7 +12,7 @@ class AuthViewModel(
 ) : ViewModel() {
     private val _authState = MutableStateFlow(AuthState())
     val authState = _authState
-
+//    com.googleusercontent.apps.366676709058-hboq28etab2kr1a5kcv8v8s820th3thl
     fun signIn() = viewModelScope.launch {
         _authState.update { it.copy(isLoading = true) }
         try {
