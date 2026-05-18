@@ -1,7 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.lang.module.ModuleFinder.compose
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -39,7 +38,10 @@ kotlin {
             baseName = "composeApp"
             isStatic = true
         }
-//        pod("GoogleSignIn")
+        // linkOnly: Kotlin uses the API; the iosApp Podfile links the native library.
+        pod("GoogleSignIn") {
+            linkOnly = true
+        }
     }
     
     jvm()

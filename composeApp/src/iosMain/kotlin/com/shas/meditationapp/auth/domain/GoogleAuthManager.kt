@@ -1,49 +1,46 @@
 package com.shas.meditationapp.auth.domain
 
+import cocoapods.GoogleSignIn.GIDSignIn
 import com.shas.meditationapp.auth.data.GoogleUser
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.UIKit.UIApplication
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-//import cocoapods.GoogleSignIn.GIDSignIn
-
 actual class GoogleAuthManager {
 
     @OptIn(ExperimentalForeignApi::class)
     actual suspend fun signIn(): GoogleUser? =
-        suspendCoroutine { continutation ->
-
-
+        suspendCoroutine { continuation ->
             val rootViewController =
                 UIApplication.sharedApplication.keyWindow?.rootViewController
 
-
             if (rootViewController == null) {
-                continutation.resume(null)
+                continuation.resume(null)
             } else {
                 GIDSignIn.sharedInstance
                     .signInWithPresentingViewController(rootViewController) { gidSignInResult, nsError ->
-                        nsError?.let { println("Error While signing: $nsError") }
+                        nsError?.let { println("Error while signing in: $nsError") }
                         val idToken = gidSignInResult?.user?.idToken?.tokenString
                         val profile = gidSignInResult?.user?.profile
                         if (idToken != null) {
-                            val googleUser =
+                            continuation.resume(
                                 GoogleUser(
-                                    id = idToken.toString(),
-                                    name = profile?.name ?: "",
+                                    id = idToken,
+                                    name = profile?.name,
+                                    email = profile?.email,
                                     profileUrl = profile?.imageURLWithDimension(320u)?.absoluteString,
-                                    email = ""
                                 )
-                            continutation.resume(googleUser)
+                            )
                         } else {
-                            continutation.resume(null)
+                            continuation.resume(null)
                         }
                     }
             }
         }
 
+    @OptIn(ExperimentalForeignApi::class)
     actual fun signOut() {
-//        GIDSignIn.sharedInstance.signOut()
+        GIDSignIn.sharedInstance.signOut()
     }
 }
