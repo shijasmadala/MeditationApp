@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
     id("com.google.gms.google-services")
+    alias(libs.plugins.kotlinCocoapods)
 //    alias(libs.plugins.room)
 }
 
@@ -29,7 +30,7 @@ kotlin {
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
-            isStatic = true
+//            isStatic = true
         }
     }
     
@@ -38,6 +39,22 @@ kotlin {
     js {
         browser()
         binaries.executable()
+    }
+
+    cocoapods {
+        version = "1.0"                          // ← this fixes your error
+        summary = "MeditationApp Shared Module"
+        homepage = "https://github.com/placeholder"
+        ios.deploymentTarget = "14.0"
+
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+
+        pod("GoogleSignIn") {
+            version = "~> 7.1"
+        }
     }
     
 //    @OptIn(ExperimentalWasmDsl::class)
