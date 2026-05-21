@@ -1,7 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.lang.module.ModuleFinder.compose
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -23,16 +22,16 @@ kotlin {
         }
     }
     
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-//            isStatic = true
-        }
-    }
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "ComposeApp"
+////            isStatic = true
+//        }
+//    }
     
     jvm()
     
@@ -41,19 +40,33 @@ kotlin {
         binaries.executable()
     }
 
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
     cocoapods {
-        version = "1.0"                          // ← this fixes your error
+        version = "1.0"
         summary = "MeditationApp Shared Module"
         homepage = "https://github.com/placeholder"
         ios.deploymentTarget = "14.0"
+        podfile = project.file("../iosApp/Podfile")
 
         framework {
             baseName = "ComposeApp"
-            isStatic = true
+            isStatic = false
         }
 
         pod("GoogleSignIn") {
             version = "~> 7.1"
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("FirebaseCore") {
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("FirebaseAuth") {
+            extraOpts += listOf("-compiler-option", "-fmodules")
         }
     }
     
