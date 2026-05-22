@@ -1,5 +1,8 @@
 package com.shas.meditationapp.di
 
+import android.content.Context
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.SharedPreferencesSettings
 import com.shas.meditationapp.AndroidAudioPlayer
 import com.shas.meditationapp.auth.domain.GoogleAuthManager
 import com.shas.meditationapp.song_details.domain.AudioPlayer
@@ -15,5 +18,14 @@ actual val platformModule: Module
         single<AudioPlayer> { AndroidAudioPlayer(androidContext()) }
         single {
             GoogleAuthManager(get())
+        }
+        single<Settings> {
+
+            SharedPreferencesSettings(
+                androidContext().getSharedPreferences(
+                    "app_settings",
+                    Context.MODE_PRIVATE
+                )
+            )
         }
     }

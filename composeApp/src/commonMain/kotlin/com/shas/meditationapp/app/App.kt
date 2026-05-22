@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.shas.meditationapp.ProfileScreen
+import com.shas.meditationapp.auth.presentation.AuthViewModel
 import com.shas.meditationapp.auth.presentation.LoginScreen
 import com.shas.meditationapp.explore.presentation.screen.ExploreScreen
 import com.shas.meditationapp.explore.presentation.screen.SearchScreen
@@ -44,7 +45,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 @Preview
-fun App() {
+fun App(authViewModel: AuthViewModel = koinViewModel()) {
+    val isLoggedIn = authViewModel.getSavedUser()
     AppTheme {
         val navController = rememberNavController()
         val snackBarHostState = remember { SnackbarHostState() }
@@ -62,7 +64,7 @@ fun App() {
             ) {
                 NavHost(
                     navController = navController,
-                    startDestination = Route.AuthNavGraph,
+                    startDestination = if (isLoggedIn) Route.MainNavGraph else Route.AuthNavGraph,
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
