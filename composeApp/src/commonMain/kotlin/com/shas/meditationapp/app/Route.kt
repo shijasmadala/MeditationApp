@@ -7,6 +7,13 @@ interface Route {
     data object MainNavGraph : Route
 
     @Serializable
+    data object AuthNavGraph : Route
+//    data object PlayerNavGraph : Route
+
+    @Serializable
+    data object LoginScreen : Route
+
+    @Serializable
     data object HomeScreen : Route
 
     @Serializable

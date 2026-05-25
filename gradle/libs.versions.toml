@@ -12,12 +12,13 @@ androidx-testExt = "1.3.0"
 composeHotReload = "1.0.0-rc02"
 composeMultiplatform = "1.9.1"
 junit = "4.13.2"
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 kotlinx-coroutines = "1.10.2"
 media3Exoplayer = "1.3.1"
+multiplatformSettings = "1.3.0"
 navigationCompose = "2.9.2"
 kotlinSerialization = "1.7.3"
-koin = "4.0.0"
+koin = "4.1.0"
 ktor = "3.0.0"
 coil3 = "3.0.0-rc02"
 ksp = "2.0.21-1.0.25"
@@ -28,6 +29,7 @@ pagingCommonVersion = "3.3.0-alpha02-0.4.0"
 animationCoreAndroid = "1.8.3"
 uiGraphicsAndroid = "1.8.3"
 uiGeometryAndroid = "1.8.3"
+cocoapods = "2.2.21"
 
 [libraries]
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }
@@ -44,6 +46,7 @@ androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecyc
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
+multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "pagingCommonVersion" }
 
 
@@ -85,6 +88,7 @@ composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "com
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "cocoapods" }
 
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

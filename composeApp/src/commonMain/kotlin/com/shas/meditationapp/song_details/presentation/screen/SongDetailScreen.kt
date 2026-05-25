@@ -65,7 +65,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun SongDetailsScreen(
     navController: NavController,
     viewModel: SongDetailViewModel = koinViewModel(
-        viewModelStoreOwner = rememberMainNavBackStackEntry(navController)
+        viewModelStoreOwner = rememberMainNavBackStackEntry(navController)!!
     ),
     trackId: String?,
     snackbarHostState: SnackbarHostState

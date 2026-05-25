@@ -1,6 +1,8 @@
 package com.shas.meditationapp.di
 
 
+import SessionManager
+import com.shas.meditationapp.auth.presentation.AuthViewModel
 import com.shas.meditationapp.core.data.HttpClientFactory
 import com.shas.meditationapp.explore.data.repository.ExploreRepositoryImpl
 import com.shas.meditationapp.explore.domain.repository.ExploreRepository
@@ -28,9 +30,13 @@ val sharedModule = module {
     singleOf(::HomeRepositoryImpl).bind<HomeRepository>()
     singleOf(::ExploreRepositoryImpl).bind<ExploreRepository>()
     singleOf(::SongDetailsRepositoryImpl).bind<SongDetailsRepository>()
+    single {
+        SessionManager(get())
+    }
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::ExploreViewModel)
     viewModelOf(::SongDetailViewModel)
     viewModelOf(::SearchScreenViewModel)
+    viewModelOf(::AuthViewModel)
 }

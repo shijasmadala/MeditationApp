@@ -34,18 +34,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.shas.meditationapp.app.Route
-import com.shas.meditationapp.app.rememberMainNavBackStackEntry
 import com.shas.meditationapp.ui.theme.AppBackground
-import org.koin.compose.viewmodel.koinViewModel
 
 private val MiniPlayerPurple = Color(0xFF8A2BE2)
 
 @Composable
 fun MiniPlayerBar(
     navController: NavController,
-    viewModel: SongDetailViewModel = koinViewModel(
-        viewModelStoreOwner = rememberMainNavBackStackEntry(navController)
-    )
+    viewModel: SongDetailViewModel
 ) {
     val state by viewModel.songDetailState.collectAsStateWithLifecycle()
     val isPlaying by viewModel.isPlaying.collectAsStateWithLifecycle()

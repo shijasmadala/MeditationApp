@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -10,6 +9,8 @@ plugins {
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
+    id("com.google.gms.google-services")
+    alias(libs.plugins.kotlinCocoapods)
 //    alias(libs.plugins.room)
 }
 
@@ -20,22 +21,52 @@ kotlin {
         }
     }
     
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "ComposeApp"
+////            isStatic = true
+//        }
+//    }
     
     jvm()
     
     js {
         browser()
         binaries.executable()
+    }
+
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    cocoapods {
+        version = "1.0"
+        summary = "MeditationApp Shared Module"
+        homepage = "https://github.com/placeholder"
+        ios.deploymentTarget = "14.0"
+        podfile = project.file("../iosApp/Podfile")
+
+        framework {
+            baseName = "ComposeApp"
+            isStatic = false
+        }
+
+        pod("GoogleSignIn") {
+            version = "~> 7.1"
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("FirebaseCore") {
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("FirebaseAuth") {
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
     }
     
 //    @OptIn(ExperimentalWasmDsl::class)
@@ -59,6 +90,14 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.media3.exoplayer)
             implementation(libs.androidx.media3.ui)
+
+            //fire base
+            implementation("com.google.android.gms:play-services-auth:21.2.0")
+            implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
+
+            implementation("androidx.credentials:credentials:1.5.0")
+            implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+            implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -83,6 +122,8 @@ kotlin {
             implementation(libs.bundles.coil)
 
             implementation(compose.materialIconsExtended)
+
+            implementation(libs.multiplatform.settings)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
