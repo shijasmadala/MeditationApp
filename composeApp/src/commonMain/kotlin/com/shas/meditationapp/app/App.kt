@@ -1,6 +1,9 @@
 package com.shas.meditationapp.app
 
 import SongDetailsScreen
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,13 +31,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.shas.meditationapp.ProfileScreen
 import com.shas.meditationapp.auth.presentation.AuthViewModel
 import com.shas.meditationapp.auth.presentation.LoginScreen
 import com.shas.meditationapp.explore.presentation.screen.ExploreScreen
 import com.shas.meditationapp.explore.presentation.screen.SearchScreen
 import com.shas.meditationapp.favorites.FavoritesScreen
 import com.shas.meditationapp.home.presentation.screen.HomeScreen
+import com.shas.meditationapp.profile.ProfileScreen
 import com.shas.meditationapp.song_details.presentation.MiniPlayerBar
 import com.shas.meditationapp.song_details.presentation.SongDetailViewModel
 import com.shas.meditationapp.ui.theme.AppBackground
@@ -87,7 +90,14 @@ fun App(authViewModel: AuthViewModel = koinViewModel()) {
                             FavoritesScreen()
                         }
 
-                        composable<Route.ProfileScreen> {
+                        composable<Route.ProfileScreen>(
+                            popEnterTransition = {
+                                fadeIn(animationSpec = tween(300))
+                            },
+                            popExitTransition = {
+                                fadeOut(animationSpec = tween(300))
+                            }
+                        ) {
                             ProfileScreen()
                         }
 
