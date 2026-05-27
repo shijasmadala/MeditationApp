@@ -40,15 +40,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.shas.meditationapp.ui.theme.AppBackground
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientEnd
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientStart
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(viewModel: ProfileViewModel = koinViewModel()) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    val savedUser = state.value.savedUser
+
     val preferences = listOf(
         PreferenceItem("Notifications", Icons.Default.Notifications, "3"),
         PreferenceItem("Sleep Timer", Icons.Default.Nightlight, null),
@@ -115,27 +122,29 @@ fun ProfileScreen() {
                         ),
                         contentAlignment = Alignment.Center
                     ) {
-//                        Image(
-//                            imageVector = Icons.Default.AccountBox,
-//                            contentDescription = "",
-//                        )
-                        Text(
-                            "U",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            color = Color.White
+                        AsyncImage(
+                            model = savedUser?.profileUrl,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
                         )
+//                        Text(
+//                            "U",
+//                            fontWeight = FontWeight.Bold,
+//                            fontSize = 20.sp,
+//                            color = Color.White
+//                        )
                     }
 
                     Column {
                         Text(
-                            "Guest User",
+                            if (savedUser?.name?.isEmpty() == true) "Guest User" else "${savedUser?.name}",
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 16.sp,
                             color = Color.White
                         )
                         Text(
-                            "guest@gmail.com",
+                            if (savedUser?.email?.isEmpty() == true) "guest@gmail.com" else "${savedUser?.email}",
                             fontWeight = FontWeight.Medium,
                             fontSize = 14.sp,
                             color = Color.LightGray

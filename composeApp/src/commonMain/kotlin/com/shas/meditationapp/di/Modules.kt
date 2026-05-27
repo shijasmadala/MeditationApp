@@ -13,6 +13,8 @@ import com.shas.meditationapp.home.data.network.RemoteHomeSource
 import com.shas.meditationapp.home.data.repository.HomeRepositoryImpl
 import com.shas.meditationapp.home.domain.repository.HomeRepository
 import com.shas.meditationapp.home.presentation.HomeViewModel
+import com.shas.meditationapp.profile.ProfileScreen
+import com.shas.meditationapp.profile.ProfileViewModel
 import com.shas.meditationapp.song_details.data.repository.SongDetailsRepositoryImpl
 import com.shas.meditationapp.song_details.domain.repository.SongDetailsRepository
 import com.shas.meditationapp.song_details.presentation.SongDetailViewModel
@@ -39,4 +41,5 @@ val sharedModule = module {
     viewModelOf(::SongDetailViewModel)
     viewModelOf(::SearchScreenViewModel)
     viewModelOf(::AuthViewModel)
+    viewModelOf(::ProfileViewModel)
 }
