@@ -45,14 +45,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.shas.meditationapp.app.Route
 import com.shas.meditationapp.ui.theme.AppBackground
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientEnd
 import com.shas.meditationapp.ui.theme.FeaturedCardGradientStart
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel = koinViewModel()) {
+fun ProfileScreen(
+    viewModel: ProfileViewModel = koinViewModel(),
+    navController: NavController
+) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val savedUser = state.value.savedUser
 
@@ -122,29 +127,30 @@ fun ProfileScreen(viewModel: ProfileViewModel = koinViewModel()) {
                         ),
                         contentAlignment = Alignment.Center
                     ) {
-                        AsyncImage(
-                            model = savedUser?.profileUrl,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
-//                        Text(
-//                            "U",
-//                            fontWeight = FontWeight.Bold,
-//                            fontSize = 20.sp,
-//                            color = Color.White
-//                        )
+                        if (!savedUser?.name.isNullOrEmpty())
+                            AsyncImage(
+                                model = savedUser.profileUrl,
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            ) else
+                            Text(
+                                "G",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                                color = Color.White
+                            )
                     }
 
                     Column {
                         Text(
-                            if (savedUser?.name?.isEmpty() == true) "Guest User" else "${savedUser?.name}",
+                            if (savedUser?.name.isNullOrEmpty()) "Guest User" else savedUser.name,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 16.sp,
                             color = Color.White
                         )
                         Text(
-                            if (savedUser?.email?.isEmpty() == true) "guest@gmail.com" else "${savedUser?.email}",
+                            if (savedUser?.email.isNullOrEmpty()) "guest@gmail.com" else savedUser.email,
                             fontWeight = FontWeight.Medium,
                             fontSize = 14.sp,
                             color = Color.LightGray
@@ -196,7 +202,12 @@ fun ProfileScreen(viewModel: ProfileViewModel = koinViewModel()) {
             }
             Spacer(modifier = Modifier.height(32.dp))
             OutlinedButton(
-                onClick = {},
+                onClick = {
+                    viewModel.logOutUser()
+                    navController.navigate(Route.LoginScreen){
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
                 modifier = Modifier.fillMaxWidth().height(50.dp),
                 shape = RoundedCornerShape(10.dp),
                 border = BorderStroke(

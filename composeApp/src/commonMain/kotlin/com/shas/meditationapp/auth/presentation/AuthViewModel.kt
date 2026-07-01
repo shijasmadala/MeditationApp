@@ -41,9 +41,14 @@ class AuthViewModel(
         }
     }
 
-    fun getSavedUser(): Boolean {
+    fun getSavedUser(): Pair<Boolean, Boolean> {
         val user = sessionManager.getUser()
-        return user != null
+        val isGuestUser = sessionManager.isGuestUser()
+        return Pair(user != null, isGuestUser)
+    }
+
+    fun saveIsGuestUser() {
+        sessionManager.saveIsGuestUser()
     }
 
     fun signOut() {

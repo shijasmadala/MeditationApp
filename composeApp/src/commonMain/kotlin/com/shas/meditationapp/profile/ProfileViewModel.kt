@@ -20,4 +20,8 @@ class ProfileViewModel(
         val user = sessionManager.getUser()
         _state.update { it.copy(savedUser = user) }
     }
+
+    fun logOutUser() {
+        sessionManager.logout()
+    }
 }

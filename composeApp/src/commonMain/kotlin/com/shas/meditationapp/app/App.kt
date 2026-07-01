@@ -49,7 +49,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 @Preview
 fun App(authViewModel: AuthViewModel = koinViewModel()) {
-    val isLoggedIn = authViewModel.getSavedUser()
+    val (isLoggedIn, isGuestUser) = authViewModel.getSavedUser()
     AppTheme {
         val navController = rememberNavController()
         val snackBarHostState = remember { SnackbarHostState() }
@@ -67,7 +67,7 @@ fun App(authViewModel: AuthViewModel = koinViewModel()) {
             ) {
                 NavHost(
                     navController = navController,
-                    startDestination = if (isLoggedIn) Route.MainNavGraph else Route.AuthNavGraph,
+                    startDestination = if (isLoggedIn || isGuestUser) Route.MainNavGraph else Route.AuthNavGraph,
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
@@ -98,7 +98,7 @@ fun App(authViewModel: AuthViewModel = koinViewModel()) {
                                 fadeOut(animationSpec = tween(300))
                             }
                         ) {
-                            ProfileScreen()
+                            ProfileScreen(navController = navController)
                         }
 
                         composable<Route.SongDetailsScreen> {

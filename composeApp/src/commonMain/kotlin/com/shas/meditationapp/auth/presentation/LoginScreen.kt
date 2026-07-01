@@ -149,6 +149,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = koinVie
 
             OutlinedButton(
                 onClick = {
+                    viewModel.saveIsGuestUser()
                     navController.navigate(Route.HomeScreen)
                 },
                 modifier = Modifier
