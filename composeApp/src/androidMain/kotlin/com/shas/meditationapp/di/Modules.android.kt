@@ -17,7 +17,7 @@ actual val platformModule: Module
         single<HttpClientEngine> { OkHttp.create() }
         single<AudioPlayer> { AndroidAudioPlayer(androidContext()) }
         single {
-            GoogleAuthManager(get())
+            GoogleAuthManager(androidContext())
         }
         single<Settings> {
 

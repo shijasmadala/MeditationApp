@@ -23,7 +23,7 @@ class AuthViewModel(
                 it.copy(
                     isLoading = false,
                     userData = user,
-                    error = if (user == null) "Login failed" else null
+                    error = if (user == null) "Unable to open Google Sign-In. Please try again." else null
                 )
             }
             if (user != null) {
@@ -54,5 +54,11 @@ class AuthViewModel(
     fun signOut() {
         googleAuthManager.signOut()
         _authState.value = AuthState()
+    }
+
+    fun clearError() {
+        _authState.update {
+            it.copy(error = null)
+        }
     }
 }

@@ -25,6 +25,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,15 +49,24 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: AuthViewModel = koinViewModel()) {
+fun LoginScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = koinViewModel(),
+    snackBarHostState: SnackbarHostState
+) {
     val state by viewModel.authState.collectAsStateWithLifecycle()
-    LaunchedEffect(state.userData) {
+    LaunchedEffect(state.userData, state.error) {
         if (state.userData != null) {
             navController.navigate(Route.HomeScreen) {
                 popUpTo(Route.LoginScreen) {
                     inclusive = true
                 }
             }
+        }
+
+        state.error?.let {
+            snackBarHostState.showSnackbar(state.error ?: "")
+            viewModel.clearError()
         }
     }
     Box(modifier = Modifier.fillMaxSize().background(AppBackground)) {

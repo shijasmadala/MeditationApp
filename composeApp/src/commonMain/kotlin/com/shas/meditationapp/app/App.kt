@@ -74,7 +74,7 @@ fun App(authViewModel: AuthViewModel = koinViewModel()) {
                 ) {
                     navigation<Route.AuthNavGraph>(startDestination = Route.LoginScreen) {
                         composable<Route.LoginScreen> {
-                            LoginScreen(navController)
+                            LoginScreen(navController, snackBarHostState = snackBarHostState)
                         }
                     }
                     navigation<Route.MainNavGraph>(startDestination = Route.HomeScreen) {
@@ -106,7 +106,7 @@ fun App(authViewModel: AuthViewModel = koinViewModel()) {
                             SongDetailsScreen(
                                 trackId = args.trackId,
                                 navController = navController,
-                                snackbarHostState = snackBarHostState
+                                snackBarHostState = snackBarHostState
                             )
                         }
 

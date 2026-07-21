@@ -68,7 +68,7 @@ fun SongDetailsScreen(
         viewModelStoreOwner = rememberMainNavBackStackEntry(navController)!!
     ),
     trackId: String?,
-    snackbarHostState: SnackbarHostState
+    snackBarHostState: SnackbarHostState
 ) {
     val state by viewModel.songDetailState.collectAsStateWithLifecycle()
     val isPlaying by viewModel.isPlaying.collectAsState()
@@ -105,7 +105,7 @@ fun SongDetailsScreen(
             state.songDetail != null &&
             state.songDetail?.results.isNullOrEmpty()
         ) {
-            snackbarHostState.showSnackbar(
+            snackBarHostState.showSnackbar(
                 "Track currently not available",
                 duration = SnackbarDuration.Short
             )
